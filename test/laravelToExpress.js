@@ -1,7 +1,7 @@
 "use strict";
 const laravelToExpress = require('../lib/laravelToExpress');
 
-describe('laravelToExpress', function() {
+describe('laravelToExpress(uri:string[, constraints:object]):string', function() {
 
     it('should convert Laravel-style urls with params to express-style', function() {
 
