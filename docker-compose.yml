@@ -1,0 +1,10 @@
+version: '2.1'
+services:
+
+  express-laravel-router:
+    build: .
+    image: shaunpersad/express-laravel-router
+    command: npm test
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
