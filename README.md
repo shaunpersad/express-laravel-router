@@ -117,6 +117,11 @@ router.route({ uri: '/api' }, (req, res) => {
    
 });
 
+// the default method is "get", and if a string is used instead of an object, that string becomes the uri option.
+router.route('/api', (req, res) => {
+   
+});
+
 // using router.{method} prefills the options object with the correct method.
 router.get({ uri: '/api' }, (req, res) => {
     
