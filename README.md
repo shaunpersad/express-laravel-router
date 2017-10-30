@@ -15,6 +15,11 @@ To summarize:
 - Execute custom code for each route definition
 - Generate urls for a given route definition
 
+## Installation
+```bash
+npm install express-laravel-router --save
+```
+
 ## Quickstart
 ```js
 const express = require('express');
