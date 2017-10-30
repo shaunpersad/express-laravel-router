@@ -68,7 +68,7 @@ shortcut to setting the `prefix` option in the group `options` object, and the `
 
 ### Group options
 The full group `options` object with their default values looks like this:
-```json
+```js
 {
     "prefix": "/", // url prefix shared by all routes in this group
     "middleware": [], // middleware shared by all routes in this group
@@ -93,7 +93,7 @@ For more details, see the [wiki page](https://github.com/shaunpersad/express-lar
 
 ### Route options
 The full route `options` object with their default values looks like this:
-```json
+```js
 {
     "method": "get", // the HTTP method for this route definition
     "uri": "/", // the url fragment for this route definition
