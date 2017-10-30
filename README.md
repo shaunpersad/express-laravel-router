@@ -84,6 +84,7 @@ Also note that the following are all equivalent:
 router.group({ prefix: '/api' }, (router) => {
    
 });
+
 // shortcut to the above
 router.group('/api', (router) => {
    
@@ -110,14 +111,17 @@ Also note that the following are all equivalent:
 router.route({ method: 'get', uri: '/api' }, (req, res) => {
    
 });
+
 // the default method is "get"
 router.route({ uri: '/api' }, (req, res) => {
    
 });
+
 // using router.{method} prefills the options object with the correct method.
 router.get({ uri: '/api' }, (req, res) => {
     
 });
+
 // shortcut to the above
 router.get('/api', (req, res) => {
    
@@ -160,6 +164,7 @@ set the proper `method` field in the options.
 router.route({ method: 'post', uri: '/create' }, (req, res) => {
     
 });
+
 // shortcut to the above
 router.post('/create', (req, res) => {
    
