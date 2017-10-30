@@ -62,7 +62,7 @@ The pure express.js version is not only visually harder to reason about, but it 
 routes and middleware are added.
 
 ## Usage
-Our quickstart example used strings as the first argument for both the `router.group` and `router.route` methods. You are 
+Our quickstart example used strings as the first argument for both the `router.group` and `router.get` methods. You are 
 also able to supply an `options` object instead, for more powerful functionality. Supplying just a string is actually a 
 shortcut to setting the `prefix` option in the group `options` object, and the `uri` option in the route `options` object. 
 
@@ -70,98 +70,140 @@ shortcut to setting the `prefix` option in the group `options` object, and the `
 The full group `options` object with their default values looks like this:
 ```json
 {
-    "prefix": "/",
-    "middleware": [],
-    "namespace": "",
-    "patterns": {},
-    "meta": {}
+    "prefix": "/", // url prefix shared by all routes in this group
+    "middleware": [], // middleware shared by all routes in this group
+    "namespace": "", // namespace shared by all named routes in this group
+    "patterns": {}, // regex patterns shared by all route params in this group
+    "meta": {} // additional meta data to associate to all routes in this group
 }
 ```
 Note that all fields are optional, and any combination of fields can be used.
 
-##### `prefix`
-A string that is the common uri to shared with all routes in this group.
+Also note that the following are all equivalent:
 ```js
 router.group({ prefix: '/api' }, (router) => {
-    // all routes defined in here will have their uris prefixed by /api.
+   
+});
+// shortcut to the above
+router.group('/api', (router) => {
+   
 });
 ```
-Note that the above example is functionally equivalent to the `/api` group in the quickstart example.
+For more details, see the [wiki page](https://github.com/shaunpersad/express-laravel-router/wiki/Group-options).
 
-##### `middleware`
-An array of middleware shared with all routes in this group.
+### Route options
+The full route `options` object with their default values looks like this:
+```json
+{
+    "method": "get", // the HTTP method for this route definition
+    "uri": "/", // the url fragment for this route definition
+    "middleware": [], // the middleware specific to this route definition
+    "name": "", // a name to associate to this route definition
+    "patterns": {}, // any patterns specific to this route definition
+    "meta": {} // any additional meta data to associate to this route definition
+}
+```
+Note that all fields are optional, and any combination of fields can be used.
+
+Also note that the following are all equivalent:
 ```js
-router.group({ 
-    middleware: [
-        (req, res, next) => {
-            next();
-        },
-        (req, res, next) => {
-            next();
-        }
-    ]
-}, (router) => {
-    // all routes defined in here will inherit the above middleware.
+router.route({ method: 'get', uri: '/api' }, (req, res) => {
+   
+});
+// the default method is "get"
+router.route({ uri: '/api' }, (req, res) => {
+   
+});
+// using router.{method} prefills the options object with the correct method.
+router.get({ uri: '/api' }, (req, res) => {
+    
+});
+// shortcut to the above
+router.get('/api', (req, res) => {
+   
 });
 ```
+For more details, see the [wiki page](https://github.com/shaunpersad/express-laravel-router/wiki/Route-options).
 
-##### `namespace`
-A string that will be prefixed to any named routes in this group.
+## Full API
+Below are all the methods available on a `router`.
+
+##### `router.group(options:string|object, closure:function(router:Router))`
+Creates a route group and provides a new `router` instance inside the `closure` to perform additional routing inside that group.
+
+##### `router.route(options:string|object, action:*)`
+Creates a route definition and associates an `action` with it. The `action` is then passed to a `mapActionToHandler`
+function, whose job it is to return the familiar express.js requestHandler function, whose signature is:
 ```js
-router.group({ 
-    namespace: 'api.'
-}, (router) => {
-
-    router.get({ uri: '/users', name: 'getUsers' }, (req, res) => {
-        // this route can generate a url by supplying "api.getUsers" to the router.url() function.
-    });
-});
+(req, res) => {
+    
+}
 ```
-Note that route names can be useful for other purposes, such as defining the operationIds in swagger/openapi specs.
-
-##### `patterns`
-An object whose key=>value pairs are actually route params => regex patterns. Routes using these route params will only
-be matched if the param successfully matches its regex pattern.
-```js
-router.group({ 
-    prefix: '/users',
-    patterns: {
-        userId: /^\d+$/
-    }
-}, (router) => {
-
-    router.get('/{userId}', (req, res) => {
-        // this route will only be matched if userId is a number.
-    });
-});
-```
-
-##### `meta`
-An object that can contain arbitrary custom data. This is useful if you wish to associate some data with each route
-definition outside of the common options provided above.
+The default `mapActionToHandler` function assumes that the `action` passed to `router.route` is already an express.js
+requestHandler function. This behavior can be changed by supplying a new `mapActionToHandler` function to `createRouter`:
 ```js
 const mapActionToHandler = (action, routeDescription, routeOptions) => {
-    // routeDescription.meta will contain {foo: 'bar', baz: 'qux'};
-    // routeOptions.meta will contain {baz: 'qux'}
-    return action;
+
+    return action.customHandler;
 };
 
 const router = createRouter(app, mapActionToHandler);
 
-router.group({ 
-    prefix: '/api',
-    meta: {
-        foo: 'bar'
-    },
-}, (router) => {
+router.route('/users', { customHandler: (req, res) => {} });
+```
+The above example now expects that the `action` is an object with a `customHandler` property.
 
-    router.get({
-        uri: '/users',
-        meta: {
-            baz: 'qux'
-        }
-    }, (req, res) => {
-
-    });
+##### `router.{method}(options:string|object, action:*)`
+Instead of supplying a `method` in the options of `router.route`, you can simply call `router.{method}`, which will
+set the proper `method` field in the options.
+```js
+router.route({ method: 'post', uri: '/create' }, (req, res) => {
+    
+});
+// shortcut to the above
+router.post('/create', (req, res) => {
+   
 });
 ```
+
+##### `router.serve(uri:string, staticMiddleware)`
+Creates a route that serves static files.
+```js
+router.serve('/assets', express.static('./public/assets'));
+```
+
+##### `router.url(name:string[, params:object]):string`
+Creates and returns a url for the route definition with the given name. If that route contains params, you can pass in
+values to fill in the params in the optional `params` object. Any extra fields found in the `params` object but not found
+in the route definition will be considered query params, and will be appended to the url as a query string.
+
+If there are any patterns on the params, they must be honored by the supplied params, or an error will be thrown.
+```js
+router.group({ prefix: '/user/{userId}', namespace: 'user.' }, (router) => {
+   
+    router.get({ uri: '/friend/{friendId}', name: 'getFriend' }, (req, res) => {
+        
+    });
+});
+
+const url = router.url('user.getFriend', { userId: 1, friendId: 2, foo: 'bar' });
+// url will equal /user/1/friend/2?foo=bar
+```
+```js
+router.get({ 
+    uri: '/user/{userId}', 
+    name: 'getUser', 
+    patterns: { 
+        userId: /^\d+$/ 
+    } 
+}, (req, res) => {
+    
+});
+const url = router.url('getUser', { userId: "one"}); // this will throw an error, because userId is expected to be a number.
+```
+
+## Differences to Laravel
+Unlike Laravel routes, chaining is discarded in favor of objects containing options. I found this to be a much clearer API.
+
+Additionally, some of Laravel's naming has been updated or repurposed for clarity, e.g. Laravel's "as" has become "name"
+in route definitions, and "namespace" in route groups.
