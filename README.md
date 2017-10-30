@@ -132,16 +132,14 @@ For more details, see the [wiki page](https://github.com/shaunpersad/express-lar
 ## Full API
 Below are all the methods available on a `router`.
 
-##### `router.group(options:string|object, closure:function(router:Router))`
+##### `router.group(options|prefix, closure)`
 Creates a route group and provides a new `router` instance inside the `closure` to perform additional routing inside that group.
 
-##### `router.route(options:string|object, action:*)`
+##### `router.route(options|uri, action)`
 Creates a route definition and associates an `action` with it. The `action` is then passed to a `mapActionToHandler`
 function, whose job it is to return the familiar express.js requestHandler function, whose signature is:
 ```js
-(req, res) => {
-    
-}
+(req, res) => {}
 ```
 The default `mapActionToHandler` function assumes that the `action` passed to `router.route` is already an express.js
 requestHandler function. This behavior can be changed by supplying a new `mapActionToHandler` function to `createRouter`:
@@ -157,7 +155,7 @@ router.route('/users', { customHandler: (req, res) => {} });
 ```
 The above example now expects that the `action` is an object with a `customHandler` property.
 
-##### `router.{method}(options:string|object, action:*)`
+##### `router.{method}(options|uri, action)`
 Instead of supplying a `method` in the options of `router.route`, you can simply call `router.{method}`, which will
 set the proper `method` field in the options.
 ```js
@@ -171,13 +169,13 @@ router.post('/create', (req, res) => {
 });
 ```
 
-##### `router.serve(uri:string, staticMiddleware)`
+##### `router.serve(uri, staticMiddleware)`
 Creates a route that serves static files.
 ```js
 router.serve('/assets', express.static('./public/assets'));
 ```
 
-##### `router.url(name:string[, params:object]):string`
+##### `router.url(name[, params])`
 Creates and returns a url for the route definition with the given name. If that route contains params, you can pass in
 values to fill in the params in the optional `params` object. Any extra fields found in the `params` object but not found
 in the route definition will be considered query params, and will be appended to the url as a query string.
