@@ -274,7 +274,7 @@ describe('createRouter(app:express[, mapActionToHandler:function]):Router', func
                         description: '"options" is an object with a param that has a constraint',
                         options: {
                             uri: '/foo/{bar}',
-                            constraints: {
+                            patterns: {
                                 bar: /^[a-zA-Z]*$/
                             }
                         },
@@ -391,7 +391,7 @@ describe('createRouter(app:express[, mapActionToHandler:function]):Router', func
 
         describe('router.group(groupOptions:object, closure:function)', function() {
 
-            it('creates route groups that can share common uri prefixes, middleware, namespaces, and constraints', function(done) {
+            it('creates route groups that can share common uri prefixes, middleware, namespaces, and patterns', function(done) {
 
                 let mCount = 0;
                 let mCountMiddleware = (req, res, next) => {
@@ -413,7 +413,7 @@ describe('createRouter(app:express[, mapActionToHandler:function]):Router', func
                             mCountMiddleware
                         ],
                         namespace: 'version.',
-                        constraints: {
+                        patterns: {
                             version: /^\d+$/
                         }
                     }, (router) => {
@@ -421,7 +421,7 @@ describe('createRouter(app:express[, mapActionToHandler:function]):Router', func
                         router.group({
                             prefix: '/users/{user}',
                             namespace: 'users.',
-                            constraints: {
+                            patterns: {
                                 user: /^\d+$/
                             }
                         }, (router) => {
@@ -442,7 +442,7 @@ describe('createRouter(app:express[, mapActionToHandler:function]):Router', func
                             router.route({
                                 uri: '/name',
                                 name: 'getName',
-                                constraints: {
+                                patterns: {
                                     user: /^\w+$/
                                 }
                             }, (req, res) => {

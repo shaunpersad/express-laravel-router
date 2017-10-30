@@ -1,7 +1,7 @@
 "use strict";
 const laravelToExpress = require('../lib/laravelToExpress');
 
-describe('laravelToExpress(uri:string[, constraints:object]):string', function() {
+describe('laravelToExpress(uri:string[, patterns:object]):string', function() {
 
     it('should convert Laravel-style urls with params to express-style', function() {
 
@@ -35,16 +35,16 @@ describe('laravelToExpress(uri:string[, constraints:object]):string', function()
 
     });
 
-    it('should convert regex constraints to express-style regexes in the url', function() {
+    it('should convert regex patterns to express-style regexes in the url', function() {
 
         const laravelUrl = '/{foo}/{bar}/{baz}';
-        const constraints = {
+        const patterns = {
             foo: /^[a-zA-Z]*$/,
             bar: /^\d+$/,
             baz: /^\w+$/
         };
         const result = '/:foo([a-zA-Z]*)/:bar(\\d+)/:baz(\\w+)';
-        const expressUrl = laravelToExpress(laravelUrl, constraints);
+        const expressUrl = laravelToExpress(laravelUrl, patterns);
 
         if (expressUrl !== result) {
 
