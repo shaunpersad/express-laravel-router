@@ -548,6 +548,31 @@ describe('createRouter(app:express[, mapActionToHandler:function]):Router', func
                 }
             });
 
+            it('appends a query string if params are found that are not in the uri', function() {
+
+                router.group({
+                    prefix: '/{foo}'
+                }, (router) => {
+
+                    router.route({
+                        uri: '/{bar}',
+                        name: 'baz'
+                    }, (req, res) => {
+
+                        res.send('OK');
+                    });
+                });
+
+                const baz = router.url('baz', {foo: 1, bar: 2, a: 'b', c: {d: 'e'}}, {encode: false});
+                const bazResult = '/1/2?a=b&c[d]=e';
+
+                if (baz !== bazResult) {
+
+                    throw new Error(`Expected "${bazResult}", got "${baz}" instead`);
+                }
+
+            });
+
             it('throws an error if a non-optional param is not supplied', function() {
 
                 router.group({

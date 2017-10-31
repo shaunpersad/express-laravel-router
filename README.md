@@ -21,6 +21,10 @@ npm install express-laravel-router --save
 ```
 
 ## Quickstart
+
+The below example will create two routes:
+1. A GET to `/api/v1/users/{userId}`
+2. A POST to `/api/v1/auth`
 ```js
 const express = require('express');
 const createRouter = require('express-laravel-router').createRouter;
@@ -41,9 +45,6 @@ router.group('/api', (router) => {
     });
 });
 ```
-The above will create two routes:
-1. A GET to `/api/v1/users/{userId}`
-2. A POST to `/api/v1/auth`
 
 To create the above example in pure express.js, it would look something like the following:
 ```js
@@ -185,10 +186,13 @@ Creates a route that serves static files.
 router.serve('/assets', express.static('./public/assets'));
 ```
 
-##### `router.url(name[, params])`
+##### `router.url(name, params={}, options={})`
 Creates and returns a url for the route definition with the given name. If that route contains params, you can pass in
 values to fill in the params in the optional `params` object. Any extra fields found in the `params` object but not found
 in the route definition will be considered query params, and will be appended to the url as a query string.
+
+Query strings are generated via the [qs](https://www.npmjs.com/package/qs) module, and so any options that you'd like to
+pass to `qs.stringify` can be done via the optional `options` object.
 
 If there are any patterns on the params, they must be honored by the supplied params, or an error will be thrown.
 ```js

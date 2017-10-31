@@ -1,6 +1,6 @@
 {
   "name": "express-laravel-router",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A Laravel-inspired router for express.js",
   "main": "index.js",
   "directories": {
@@ -25,5 +25,8 @@
     "express": "^4.16.2",
     "lodash": "^4.17.4",
     "supertest": "^3.0.0"
+  },
+  "dependencies": {
+    "qs": "^6.5.1"
   }
 }
