@@ -1,6 +1,6 @@
 {
   "name": "express-laravel-router",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A Laravel-inspired router for express.js",
   "main": "index.js",
   "directories": {
@@ -14,7 +14,7 @@
     "type": "git",
     "url": "git+https://github.com/shaunpersad/express-laravel-router.git"
   },
-  "keywords": [],
+  "keywords": ["express", "laravel", "router"],
   "author": "",
   "license": "MIT",
   "bugs": {
