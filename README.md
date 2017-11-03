@@ -219,6 +219,10 @@ router.get({
 const url = router.url('getUser', { userId: "one"}); // this will throw an error, because userId is expected to be a number.
 ```
 
+##### `router.app`
+Grants access to the express `app` object that was passed in to `createRouter`.
+
+
 ## Differences to Laravel
 Unlike Laravel routes, chaining is discarded in favor of objects containing options. I found this to be a much clearer API.
 

@@ -1,6 +1,6 @@
 {
   "name": "express-laravel-router",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A Laravel-inspired router for express.js",
   "main": "index.js",
   "directories": {
