@@ -222,6 +222,23 @@ const url = router.url('getUser', { userId: "one"}); // this will throw an error
 ##### `router.app`
 Grants access to the express `app` object that was passed in to `createRouter`.
 
+## Extras
+In addition to the `createRouter` function, this package also exports `laravelToExpress` and `uriWithParams` functions.
+
+##### `laravelToExpress(uri = '', patterns = {})`
+Accepts a string uri written in the Laravel way (e.g. `/user/{userId}`) and an optional object of regex patterns,
+and returns the express.js version (e.g. `/user/:userId`).
+
+##### `uriWithParams(uri = '', params = {}, patterns = {}, options = {})`
+Accepts a string uri with optional params (e.g. `/user/{userId}`). If that uri contains params, you can pass in
+values to fill in the params in the optional `params` object. Any extra fields found in the `params` object but not found
+in the route definition will be considered query params, and will be appended to the url as a query string.
+
+Query strings are generated via the [qs](https://www.npmjs.com/package/qs) module, and so any options that you'd like to
+pass to `qs.stringify` can be done via the optional `options` object.
+
+If there are any patterns on the params, they must be honored by the supplied params, or an error will be thrown.
+
 
 ## Differences to Laravel
 Unlike Laravel routes, chaining is discarded in favor of objects containing options. I found this to be a much clearer API.
