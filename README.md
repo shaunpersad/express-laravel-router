@@ -239,6 +239,17 @@ pass to `qs.stringify` can be done via the optional `options` object.
 
 If there are any patterns on the params, they must be honored by the supplied params, or an error will be thrown.
 
+##### `paramsFromUri(uri = '')`
+Accepts a string uri and will return an object that includes and array of required and optional params found in the uri.
+```js
+const uri = '/users/{userId}/friends/{friendId}/{username?}';
+const params = paramsFromUri(uri);
+/**
+* params looks like:
+* { required: ["userId", "friendId"], optional: ["username"] }
+*/
+
+```
 
 ## Differences to Laravel
 Unlike Laravel routes, chaining is discarded in favor of objects containing options. I found this to be a much clearer API.
